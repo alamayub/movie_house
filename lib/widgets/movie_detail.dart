@@ -5,6 +5,7 @@ import 'package:movie_house/screens/play_video_screen.dart';
 import 'package:movie_house/widgets/custom_image_provider.dart';
 import 'package:movie_house/widgets/my_similar_movies_widget.dart';
 
+import '../config/constants.dart';
 import '../models/movie_model.dart';
 import 'custom_rating_bar.dart';
 import 'custom_text_widget.dart';
@@ -32,19 +33,19 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Container(
-              //   height: size.height * .25,
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(12),
-              //   ),
-              //   clipBehavior: Clip.antiAlias,
-              //   child: CustomImageProvider(
-              //     image: '$IMAGE_URL${movieModel.posterPath}',
-              //   ),
-              // ),
-              // const SizedBox(height: 16),
+              Container(
+                height: size.height * .2,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CustomImageProvider(
+                  image: '$IMAGE_URL${movieModel.posterPath}',
+                ),
+              ),
+              const SizedBox(height: 16),
               CustomTextWidget(
                 title: movieModel.title ?? movieModel.name!,
                 isTitle: true,
@@ -52,7 +53,7 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
               ),
               const SizedBox(height: 8),
               SizedBox(
-                height: 150,
+                height: 100,
                 child: FutureBuilder<List<MovieVideoModel>>(
                   future: Api().getMovieVideo(movieModel.id),
                   builder: (_, snap) {
@@ -76,7 +77,6 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
                                     );
                                   },
                                   child: Container(
-                                    height: 120,
                                     width: 150,
                                     decoration: BoxDecoration(
                                       color: Colors.white,

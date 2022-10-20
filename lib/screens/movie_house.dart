@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
 import 'genre_screen.dart';
-import 'profile_screen.dart';
+// import 'profile_screen.dart';
 import 'search_screen.dart';
 import 'trending_screen.dart';
 
@@ -22,7 +22,7 @@ class _MovieHouseState extends State<MovieHouse> {
     SearchScreen(),
     TrendingScreen(),
     GenreScreen(),
-    ProfileScreen(),
+    // ProfileScreen(),
   ];
 
   @override
@@ -74,10 +74,10 @@ class _MovieHouseState extends State<MovieHouse> {
             icon: Icon(Icons.category),
             label: 'Genre',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.person),
+          //   label: 'Profile',
+          // ),
         ],
       ),
     );

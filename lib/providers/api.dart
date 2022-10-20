@@ -11,7 +11,6 @@ import '../models/movie_model.dart';
 import '../models/movie_video_model.dart';
 
 class Api {
-  final BASE_URL = 'https://api.themoviedb.org/3';
 
   // get genre list
   Future<List<GenreModel>> getGenres() async {
