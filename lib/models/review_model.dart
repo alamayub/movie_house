@@ -45,10 +45,10 @@ class AuthorDetailModel {
 
   factory AuthorDetailModel.fromJson(Map<String, dynamic> json) {
     return AuthorDetailModel(
-      name: json['name'],
-      username: json['username'],
-      avatarPath: json['avatar_path'],
-      rating: json['rating'],
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      avatarPath: json['avatar_path'] ?? '',
+      rating: json['rating'] ?? '',
     );
   }
 

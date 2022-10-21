@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "748918183885",
+    "project_id": "moviehouse02",
+    "storage_bucket": "moviehouse02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748918183885:android:53ce0e1d82eac002661684",
+        "android_client_info": {
+          "package_name": "com.example.movie_house"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748918183885-g6k2m6rekt7g55m58mboig5d41l1isg6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmv5GUTrSDw63Hhhv2dlGDL_A-fbxI6N0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748918183885-g6k2m6rekt7g55m58mboig5d41l1isg6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

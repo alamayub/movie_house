@@ -7,12 +7,10 @@ import 'movies_list_widget.dart';
 
 class MyRecommendedMovies extends StatelessWidget {
   final int id;
-  final bool click;
   final bool isHorizontal;
   const MyRecommendedMovies({
     super.key,
     required this.id,
-    required this.click,
     this.isHorizontal = false,
   });
 

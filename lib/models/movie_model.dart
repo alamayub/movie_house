@@ -2,7 +2,7 @@ class MovieModel {
   final int id;
   final bool adult;
   final String? backdropPath;
-  final List<dynamic> genreIds;
+  final List<dynamic>? genreIds;
   final String originalLanguage;
   final String? originalName;
   final String? originalTitle;
@@ -19,15 +19,15 @@ class MovieModel {
   final String? mediaType;
   final List<dynamic>? originCountry;
 
-  final String? belongsToCollection;
+  // final Map<String, dynamic>? belongsToCollection;
   final int? budget;
   final String? homepage;
-  final int? imdbId;
-  final List<dynamic>? productionCompanies;
-  final List<String>? productionCountries;
+  final String? imdbId;
+  // final List<dynamic>? productionCompanies;
+  // final List<String>? productionCountries;
   final int? revenue;
   final int? runtime;
-  final List<dynamic>? spokenLanguages;
+  // final List<dynamic>? spokenLanguages;
   final String? status;
   final String? tagline;
 
@@ -35,7 +35,7 @@ class MovieModel {
     required this.id,
     required this.adult,
     this.backdropPath,
-    required this.genreIds,
+    this.genreIds,
     required this.originalLanguage,
     this.originalName,
     this.originalTitle,
@@ -51,15 +51,15 @@ class MovieModel {
     required this.voteCount,
     this.mediaType,
     this.originCountry,
-    this.belongsToCollection,
+    // this.belongsToCollection,
     this.budget,
     this.homepage,
     this.imdbId,
-    this.productionCompanies,
-    this.productionCountries,
+    // this.productionCompanies,
+    // this.productionCountries,
     this.revenue,
     this.runtime,
-    this.spokenLanguages,
+    // this.spokenLanguages,
     this.status,
     this.tagline,
   });
@@ -74,7 +74,7 @@ class MovieModel {
       originalName: json['original_name'],
       originalTitle: json['original_title'],
       overview: json['overview'],
-      popularity: json['popularity'],
+      popularity: json['popularity'].toDouble(),
       posterPath: json['poster_path'],
       firstAirDate: json['first_air_date'],
       releaseDate: json['release_date'],
@@ -85,15 +85,15 @@ class MovieModel {
       voteCount: json['vote_count'],
       mediaType: json['media_type'],
       originCountry: json['origin_country'],
-      belongsToCollection: json['belongs_to_collection'],
+      // belongsToCollection: json['belongs_to_collection'],
       budget: json['budget'],
       homepage: json['homepage'],
       imdbId: json['imdb_id'],
-      productionCompanies: json['production_companies'],
-      productionCountries: json['production_countries'],
+      // productionCompanies: json['production_companies'],
+      // productionCountries: json['production_countries'],
       revenue: json['revenue'],
       runtime: json['runtime'],
-      spokenLanguages: json['spoken_languages'],
+      // spokenLanguages: json['spoken_languages'],
       status: json['status'],
       tagline: json['tagline'],
     );

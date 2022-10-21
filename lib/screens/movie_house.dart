@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_house/screens/recents_screen.dart';
 
 import 'home_screen.dart';
 import 'genre_screen.dart';
@@ -22,6 +23,7 @@ class _MovieHouseState extends State<MovieHouse> {
     SearchScreen(),
     TrendingScreen(),
     GenreScreen(),
+    RecentsScreen(),
     // ProfileScreen(),
   ];
 
@@ -73,6 +75,10 @@ class _MovieHouseState extends State<MovieHouse> {
           BottomNavigationBarItem(
             icon: Icon(Icons.category),
             label: 'Genre',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Recent',
           ),
           // BottomNavigationBarItem(
           //   icon: Icon(Icons.person),

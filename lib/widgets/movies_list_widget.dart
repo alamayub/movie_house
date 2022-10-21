@@ -34,24 +34,12 @@ class MoviesListWidget extends StatelessWidget {
             : ListView.separated(
                 shrinkWrap: true,
                 primary: false,
-                itemBuilder: (_, i) => MovieCard(
-                  movieModel: movies[i],
-                ),
+                itemBuilder: (_, i) => MovieCard(movieModel: movies[i]),
                 separatorBuilder: (_, i) => const SizedBox(height: 12),
                 itemCount: movies.length,
               )
         : const Center(
             child: Text('No movie found'),
           );
-    // return movies.isNotEmpty ? ListView.separated(
-    //   shrinkWrap: true,
-    //   primary: false,
-    //   padding: const EdgeInsets.all(16),
-    //   itemBuilder: (_, i) => MovieCard(movieModel: movies[i]),
-    //   separatorBuilder: (_, i) => const SizedBox(height: 12),
-    //   itemCount: movies.length,
-    // ) : const Center(
-    //   child: Text('No movie found'),
-    // );
   }
 }

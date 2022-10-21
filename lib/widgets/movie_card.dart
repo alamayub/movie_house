@@ -8,18 +8,15 @@ import 'movie_detail.dart';
 
 class MovieCard extends StatelessWidget {
   final MovieModel movieModel;
-  final bool click;
   const MovieCard({
     Key? key,
     required this.movieModel,
-    this.click = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          click == true ? showMovieDetail(context, movieModel) : () => {},
+      onTap: () => showMovieDetail(context, movieModel),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

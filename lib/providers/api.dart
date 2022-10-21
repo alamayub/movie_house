@@ -11,7 +11,6 @@ import '../models/movie_model.dart';
 import '../models/movie_video_model.dart';
 
 class Api {
-
   // get genre list
   Future<List<GenreModel>> getGenres() async {
     try {
@@ -119,7 +118,6 @@ class Api {
       }
       final response = await http.get(Uri.parse(url));
       final responseData = json.decode(response.body);
-      log('$type ${responseData.toString()}');
       final movies = responseData['results'];
       return movies != null
           ? movies!.map<MovieModel>((e) => MovieModel.fromJson(e)).toList()
@@ -136,7 +134,7 @@ class Api {
       final response = await http.get(Uri.parse(url));
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
-      log('Videos $movies');
+      log('137 $movies');
       // https://www.youtube.com/watch?v=UJlMFx6fm60
       return movies != null
           ? movies!
@@ -161,6 +159,21 @@ class Api {
           ? data!.map<ReviewModel>((e) => ReviewModel.fromJson(e)).toList()
           : [];
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  // get individual movie detail
+  Future<MovieModel> getSingleMovie(int id) async {
+    // https://api.themoviedb.org/3/movie/157336?api_key={api_key}&append_to_response=videos,images
+    try {
+      var url = '$BASE_URL/movie/$id?api_key=$API_KEY';
+      final response = await http.get(Uri.parse(url));
+      final responseData = json.decode(response.body);
+      // log('Single ${responseData.toString()}');
+      return MovieModel.fromJson(responseData);
+    } catch (e) {
+      log('Error 176 ${e.toString()}');
       rethrow;
     }
   }

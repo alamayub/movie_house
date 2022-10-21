@@ -1,18 +1,19 @@
-import 'dart:developer';
-
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_house/models/history_model.dart';
 import 'package:movie_house/models/movie_video_model.dart';
+import 'package:movie_house/providers/firestore.dart';
 import 'package:movie_house/widgets/custom_image_provider.dart';
-import 'package:movie_house/widgets/custom_text_widget.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class PlayVideoScreen extends StatefulWidget {
+  final int movieId;
   final List<MovieVideoModel> urls;
-  final String url;
+  final int index;
   const PlayVideoScreen({
     super.key,
+    required this.movieId,
     required this.urls,
-    required this.url,
+    required this.index,
   });
 
   @override
@@ -20,112 +21,98 @@ class PlayVideoScreen extends StatefulWidget {
 }
 
 class _PlayVideoScreenState extends State<PlayVideoScreen> {
-  late BetterPlayerController betterPlayerController;
-
-  List<BetterPlayerDataSource> createDataSet() {
-    List<BetterPlayerDataSource> dataSourceList = [];
-    dataSourceList.add(
-      BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      ),
-    );
-    dataSourceList.add(
-      BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      ),
-    );
-    dataSourceList.add(
-      BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8",
-      ),
-    );
-    return dataSourceList;
-  }
+  final FirestoreProvider _firestoreProvider = FirestoreProvider();
+  late YoutubePlayerController _controller;
+  final YoutubePlayerFlags _flags = const YoutubePlayerFlags(
+    autoPlay: true,
+    mute: true,
+  );
+  int index = 0;
 
   @override
   void initState() {
+    setState(() => index = widget.index);
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.urls[index].key!,
+      flags: _flags,
+    );
     super.initState();
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    );
-    betterPlayerController = BetterPlayerController(
-      const BetterPlayerConfiguration(),
-      betterPlayerDataSource: betterPlayerDataSource,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Example player"),
-      ),
-      body: SingleChildScrollView(
-        primary: false,
-        child: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: BetterPlayerPlaylist(
-                betterPlayerConfiguration: const BetterPlayerConfiguration(),
-                betterPlayerPlaylistConfiguration:
-                    const BetterPlayerPlaylistConfiguration(),
-                betterPlayerDataSourceList: createDataSet(),
-              ),
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (_, i) => InkWell(
-                onTap: () {
-                  log('hello');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 16,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: CustomImageProvider(image: widget.urls[i].img!),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextWidget(
-                              title: widget.urls[i].name!,
-                              isTitle: true,
-                            ),
-                            const SizedBox(height: 2),
-                            CustomTextWidget(
-                              title:
-                                  widget.urls[i].publishedAt!.substring(0, 10),
-                              date: true,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+    return WillPopScope(
+      onWillPop: () async {
+        // log('Total ${_controller.value.metaData.duration.inSeconds}');
+        // log('Metadata ${_controller.value.metaData}');
+        // log('Player State ${_controller.value.playerState}');
+        // log('Position ${_controller.value.position}');
+        final percentage = (_controller.value.position.inSeconds /
+                _controller.value.metaData.duration.inSeconds *
+                100)
+            .truncate();
+        final progress = double.parse(percentage.toStringAsFixed(2));
+        final HistoryModel history = HistoryModel(
+          key: widget.urls[index].key!,
+          movieId: widget.movieId,
+          duration: _controller.value.position.toString(),
+          total: _controller.value.metaData.duration.toString(),
+          progress: progress,
+        );
+        await _firestoreProvider.updateProgress(history: history);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          titleSpacing: 0,
+          title: Text(widget.urls[index].name!),
+        ),
+        body: SingleChildScrollView(
+          primary: false,
+          child: Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
                 ),
               ),
-              separatorBuilder: (_, i) => const Divider(height: 0),
-              itemCount: widget.urls.length,
-            )
-          ],
+              ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (_, i) => ListTile(
+                  onTap: () {
+                    setState(() => index = i);
+                    _controller.load(widget.urls[i].key!);
+                  },
+                  leading: Container(
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: CustomImageProvider(image: widget.urls[i].img!),
+                  ),
+                  title: Text(
+                    widget.urls[i].name!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(widget.urls[i].publishedAt!.substring(0, 10)),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 6,
+                    horizontal: 16,
+                  ),
+                  selected: index == i,
+                  selectedTileColor: Colors.grey.shade100,
+                  trailing: Icon(index == i ? Icons.stop : Icons.play_arrow),
+                ),
+                separatorBuilder: (_, i) => const Divider(height: 0),
+                itemCount: widget.urls.length,
+              )
+            ],
+          ),
         ),
       ),
     );
