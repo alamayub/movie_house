@@ -3,19 +3,19 @@ class MovieModel {
   final bool adult;
   final String? backdropPath;
   final List<dynamic>? genreIds;
-  final String originalLanguage;
+  final String? originalLanguage;
   final String? originalName;
   final String? originalTitle;
-  final String overview;
-  final double popularity;
+  final String? overview;
+  final double? popularity;
   final String? posterPath;
   final String? firstAirDate;
   final String? releaseDate;
   final String? name;
   final String? title;
   final bool? video;
-  final double voteAverage;
-  final int voteCount;
+  final double? voteAverage;
+  final int? voteCount;
   final String? mediaType;
   final List<dynamic>? originCountry;
 
@@ -31,24 +31,28 @@ class MovieModel {
   final String? status;
   final String? tagline;
 
+  final int? gender;
+  final String? knownForDepartment;
+  final String? profilePath;
+
   MovieModel({
     required this.id,
     required this.adult,
     this.backdropPath,
     this.genreIds,
-    required this.originalLanguage,
+    this.originalLanguage,
     this.originalName,
     this.originalTitle,
-    required this.overview,
-    required this.popularity,
+    this.overview,
+    this.popularity,
     this.posterPath,
     this.firstAirDate,
     this.releaseDate,
     this.name,
     this.title,
     this.video,
-    required this.voteAverage,
-    required this.voteCount,
+    this.voteAverage,
+    this.voteCount,
     this.mediaType,
     this.originCountry,
     // this.belongsToCollection,
@@ -62,6 +66,10 @@ class MovieModel {
     // this.spokenLanguages,
     this.status,
     this.tagline,
+
+    this.gender,
+    this.knownForDepartment,
+    this.profilePath,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
@@ -73,15 +81,15 @@ class MovieModel {
       originalLanguage: json['original_language'],
       originalName: json['original_name'],
       originalTitle: json['original_title'],
-      overview: json['overview'],
-      popularity: json['popularity'].toDouble(),
+      overview: json['overview'] ?? '',
+      popularity: json['popularity'] != null ? json['popularity'].toDouble() : 0,
       posterPath: json['poster_path'],
       firstAirDate: json['first_air_date'],
       releaseDate: json['release_date'],
       name: json['name'],
       title: json['title'],
       video: json['video'],
-      voteAverage: json['vote_average'].toDouble(),
+      voteAverage: json['vote_average'] != null ? json['vote_average'].toDouble() : 0,
       voteCount: json['vote_count'],
       mediaType: json['media_type'],
       originCountry: json['origin_country'],
@@ -96,6 +104,9 @@ class MovieModel {
       // spokenLanguages: json['spoken_languages'],
       status: json['status'],
       tagline: json['tagline'],
+      gender: json['gender'],
+      knownForDepartment: json['known_for_department'],
+      profilePath: json['profile_path'],
     );
   }
 }

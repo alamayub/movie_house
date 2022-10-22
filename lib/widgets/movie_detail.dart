@@ -50,7 +50,7 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 100,
+              height: 90,
               child: FutureBuilder<List<MovieVideoModel>>(
                 future: Api().getMovieVideo(movieModel.id),
                 builder: (_, snap) {
@@ -75,7 +75,7 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
                                   );
                                 },
                                 child: Container(
-                                  width: 150,
+                                  width: 120,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
@@ -134,7 +134,7 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
                 const Spacer(),
                 CustomRatingBar(
                   tap: false,
-                  initial: movieModel.voteAverage,
+                  initial: movieModel.voteAverage!,
                   onRatingUpdate: (val) {},
                 ),
                 CustomTextWidget(
@@ -145,7 +145,7 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
             ),
             const SizedBox(height: 8),
             CustomTextWidget(
-              title: movieModel.overview,
+              title: movieModel.overview!,
               maxLines: 10,
             ),
             const SizedBox(height: 16),

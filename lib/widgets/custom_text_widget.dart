@@ -6,6 +6,8 @@ class CustomTextWidget extends StatelessWidget {
   final bool date;
   final bool isTitle;
   final Color? color;
+  final double? fontSize;
+  final bool center;
   const CustomTextWidget({
     Key? key,
     required this.title,
@@ -13,6 +15,8 @@ class CustomTextWidget extends StatelessWidget {
     this.date = false,
     this.isTitle = false,
     this.color,
+    this.fontSize,
+    this.center = false,
   }) : super(key: key);
 
   @override
@@ -21,8 +25,9 @@ class CustomTextWidget extends StatelessWidget {
       title,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
+      textAlign: center == true ? TextAlign.center : TextAlign.left,
       style: TextStyle(
-        fontSize: isTitle == true ? 16 : 12,
+        fontSize: isTitle == true ? 16 : (fontSize ?? 12),
         letterSpacing: .5,
         color: color ?? (date == false ? Colors.black : Colors.black54),
         fontWeight: isTitle == true ? FontWeight.w500 : FontWeight.normal,

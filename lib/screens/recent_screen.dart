@@ -1,17 +1,17 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:movie_house/models/history_model.dart';
 import 'package:movie_house/models/movie_model.dart';
 import 'package:movie_house/providers/api.dart';
 import 'package:movie_house/providers/firestore.dart';
+import 'package:movie_house/widgets/custom_image_provider.dart';
 import 'package:movie_house/widgets/custom_text_widget.dart';
 import 'package:movie_house/widgets/loader.dart';
 
+import '../config/constants.dart';
 import '../config/helper.dart';
 
-class RecentsScreen extends StatelessWidget {
-  const RecentsScreen({super.key});
+class RecentScreen extends StatelessWidget {
+  const RecentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,11 @@ class RecentsScreen extends StatelessWidget {
               return lists.isNotEmpty
                   ? ListView.separated(
                       shrinkWrap: true,
+                      primary: false,
                       itemBuilder: (context, index) {
                         return Container(
-                          height: 100,
                           padding: const EdgeInsets.symmetric(
-                            vertical: 8,
+                            vertical: 12,
                             horizontal: 16,
                           ),
                           child: Column(
@@ -39,7 +39,7 @@ class RecentsScreen extends StatelessWidget {
                               GetRecentMovieWidget(
                                 movieId: lists[index].movieId,
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 8),
                               LinearProgressIndicator(
                                 value: lists[index].progress / 100,
                                 backgroundColor: Colors.grey,
@@ -49,19 +49,18 @@ class RecentsScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   CustomTextWidget(
-                                    title: '${(lists[index].progress)} %',
                                     date: true,
+                                    fontSize: 10,
+                                    title: getDateWithTime(lists[index].updatedAt!),
                                   ),
                                   CustomTextWidget(
-                                    title:
-                                        '${getDurationfromString(lists[index].duration)} / ${getDurationfromString(lists[index].total)}',
+                                    fontSize: 10,
+                                    title: '${lists[index].progress}%(${getDurationFromString(lists[index].duration)} / ${getDurationFromString(lists[index].total)})',
                                     date: true,
                                   ),
-                        
                                 ],
                               )
                             ],
@@ -100,17 +99,23 @@ class GetRecentMovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<MovieModel>(
       future: Api().getSingleMovie(movieId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.hasData) {
-            final MovieModel movie = snapshot.data!;
-            log('Movie ${movie.toString()}');
+      builder: (context, snap) {
+        if (snap.connectionState == ConnectionState.done) {
+          if (snap.hasData) {
+            final MovieModel movie = snap.data!;
             return Row(
               children: [
                 Container(
-                  height: 60,
+                  height: 50,
                   width: 60,
-                  color: Colors.purple,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: CustomImageProvider(
+                    image: '$IMAGE_URL${movie.posterPath}',
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -118,13 +123,14 @@ class GetRecentMovieWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomTextWidget(
-                        title: movie.name!,
+                        title: movie.title ?? '',
                         isTitle: true,
                       ),
                       const SizedBox(height: 3),
                       CustomTextWidget(
-                        title: movie.overview,
+                        title: movie.overview!,
                         maxLines: 2,
+                        date: true,
                       ),
                     ],
                   ),
@@ -132,7 +138,7 @@ class GetRecentMovieWidget extends StatelessWidget {
               ],
             );
           }
-          return Text('Error ${snapshot.error.toString()}');
+          return Text('Error ${snap.error.toString()}');
         }
         return const Center(
           child: Loader(),

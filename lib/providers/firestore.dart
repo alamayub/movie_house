@@ -34,7 +34,7 @@ class FirestoreProvider {
   }
 
   Stream<List<HistoryModel>> getHistoryStream() {
-    return movies.orderBy('updatedAt', descending: true).snapshots().map(
+    return movies.where('status', isEqualTo: true).orderBy('updatedAt', descending: true).snapshots().map(
         (docs) => docs.docs.map((e) => HistoryModel.fromSnapshot(e)).toList());
   }
 }

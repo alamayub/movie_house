@@ -8,6 +8,7 @@ class HistoryModel extends Equatable {
   final String duration;
   final String total;
   final double progress;
+  final bool? status;
   final int? createdAt;
   final int? updatedAt;
 
@@ -17,6 +18,7 @@ class HistoryModel extends Equatable {
     required this.duration,
     required this.total,
     required this.progress,
+    this.status,
     this.createdAt,
     this.updatedAt,
   });
@@ -27,6 +29,7 @@ class HistoryModel extends Equatable {
     String? duration,
     String? total,
     int? movieId,
+    bool? status,
     int? createdAt,
     int? updatedAt,
     MovieModel? movie,
@@ -36,6 +39,7 @@ class HistoryModel extends Equatable {
       movieId: movieId ?? this.movieId,
       duration: duration ?? this.duration,
       total: total ?? this.total,
+      status: status ?? this.status,
       progress: progress ?? this.progress,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -48,6 +52,7 @@ class HistoryModel extends Equatable {
       'progress': progress,
       'duration': duration,
       'total': total,
+      'status': true,
       'createdAt': DateTime.now().millisecondsSinceEpoch,
       'updatedAt': DateTime.now().millisecondsSinceEpoch
     };
@@ -68,6 +73,7 @@ class HistoryModel extends Equatable {
       movieId: snap['movieId'],
       duration: snap['duration'],
       total: snap['total'],
+      status: snap['status'],
       progress: snap['progress'],
       createdAt: snap['createdAt'],
       updatedAt: snap['updatedAt'],

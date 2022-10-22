@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_house/screens/recents_screen.dart';
+import 'package:movie_house/screens/recent_screen.dart';
 
 import 'home_screen.dart';
 import 'genre_screen.dart';
@@ -23,7 +23,7 @@ class _MovieHouseState extends State<MovieHouse> {
     SearchScreen(),
     TrendingScreen(),
     GenreScreen(),
-    RecentsScreen(),
+    RecentScreen(),
     // ProfileScreen(),
   ];
 

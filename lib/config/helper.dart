@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 
 double getVideoProgress(Duration current, Duration total) {
@@ -5,7 +7,7 @@ double getVideoProgress(Duration current, Duration total) {
   return double.parse(percentage.toStringAsFixed(2));
 }
 
-getDurationfromString(String duration) {
+getDurationFromString(String duration) {
   var format = DateFormat("HH:mm:ss");
   var one = format.parse(duration);
   String res = '';
@@ -18,6 +20,26 @@ getDurationfromString(String duration) {
     res += ' 0${one.second}s';
   } else {
     res += ' ${one.second}s';
+  }
+  return res;
+}
+
+getDateWithTime(int a) {
+  var old = DateTime.fromMillisecondsSinceEpoch(a);
+  var now = DateTime.now();
+  var diff = now.difference(old);
+  // log('Difference $diff');
+  // log('Current ${now.day - date.subtract(const Duration(days: 1)).day}');
+  // return DateFormat.yMMMd().add_jm().format(date);
+  var time = DateFormat.jm().format(old);
+  log('Day Diff ${diff.inDays}, ${diff.inHours}, ${diff.inMinutes}');
+  var res = '';
+  if(now.day == old.day) {
+    res = 'Today $time';
+  } else if(diff.inDays == 0) {
+    res = 'Yesterday, $time';
+  } else {
+    res = '${diff.inDays} days ago, $time';
   }
   return res;
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/constants.dart';
 import '../models/movie_model.dart';
 import 'custom_image_provider.dart';
-import 'custom_rating_bar.dart';
+// import 'custom_rating_bar.dart';
 import 'custom_text_widget.dart';
 import 'movie_detail.dart';
 
@@ -27,8 +27,8 @@ class MovieCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              height: 100,
-              width: 125,
+              height: 90,
+              width: 110,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -59,15 +59,32 @@ class MovieCard extends StatelessWidget {
                               movieModel.firstAirDate!,
                           date: true,
                         ),
-                        CustomRatingBar(
-                          tap: false,
-                          initial: movieModel.voteAverage,
-                          onRatingUpdate: (val) {},
+                        Row(
+                          children: [
+                            CustomTextWidget(
+                              date: true,
+                              title: movieModel.voteAverage!.toStringAsFixed(1),
+                            ),
+                            const Icon(
+                              Icons.star,
+                              size: 14,
+                              color: Colors.black54,
+                            ),
+                          ],
                         ),
+                        // CustomTextWidget(
+                        //   date: true,
+                        //   title: '${movieModel.voteAverage}/${movieModel.voteCount}',
+                        // ),
+                        // CustomRatingBar(
+                        //   tap: false,
+                        //   initial: movieModel.voteAverage,
+                        //   onRatingUpdate: (val) {},
+                        // ),
                       ],
                     ),
                     CustomTextWidget(
-                      title: movieModel.overview,
+                      title: movieModel.overview!,
                       maxLines: 2,
                     ),
                   ],
