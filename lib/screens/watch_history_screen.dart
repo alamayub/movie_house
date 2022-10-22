@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_house/config/confirmation_dialog.dart';
 import 'package:movie_house/models/history_model.dart';
 import 'package:movie_house/models/movie_model.dart';
 import 'package:movie_house/providers/api.dart';
@@ -10,8 +11,8 @@ import 'package:movie_house/widgets/loader.dart';
 import '../config/constants.dart';
 import '../config/helper.dart';
 
-class RecentScreen extends StatelessWidget {
-  const RecentScreen({super.key});
+class WatchHistoryScreen extends StatelessWidget {
+  const WatchHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +28,19 @@ class RecentScreen extends StatelessWidget {
                   ? ListView.separated(
                       shrinkWrap: true,
                       primary: false,
-                      itemBuilder: (context, index) {
-                        return Container(
+                      itemBuilder: (context, index) => Dismissible(
+                        key: UniqueKey(),
+                        confirmDismiss: (DismissDirection direction) async {
+                          if (direction == DismissDirection.endToStart) {
+                            var res = await showConfirmationDialog(context: context, title: 'Remove');
+                            if(res == true) {
+                              await FirestoreProvider().updateStatus(key: lists[index].key);
+                            }
+                          }
+                          return null;
+                        },
+                        background: Container(color: Colors.red),
+                        child: Container(
                           padding: const EdgeInsets.symmetric(
                             vertical: 12,
                             horizontal: 16,
@@ -65,8 +77,8 @@ class RecentScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                        );
-                      },
+                        ),
+                      ),
                       separatorBuilder: (context, index) =>
                           const Divider(height: 0),
                       itemCount: lists.length,

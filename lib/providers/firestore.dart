@@ -33,6 +33,17 @@ class FirestoreProvider {
     }
   }
 
+  Future<void> updateStatus({required String key}) async {
+    try {
+      await movies.doc(key).update({
+        'status': false,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch
+      });
+    } catch (e) {
+      log('Erro 43 ${e.toString()}');
+    }
+  }
+
   Stream<List<HistoryModel>> getHistoryStream() {
     return movies.where('status', isEqualTo: true).orderBy('updatedAt', descending: true).snapshots().map(
         (docs) => docs.docs.map((e) => HistoryModel.fromSnapshot(e)).toList());
