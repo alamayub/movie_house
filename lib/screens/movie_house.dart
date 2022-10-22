@@ -3,7 +3,7 @@ import 'package:movie_house/screens/watch_history_screen.dart';
 
 import 'home_screen.dart';
 import 'genre_screen.dart';
-// import 'profile_screen.dart';
+import 'profile_screen.dart';
 import 'search_screen.dart';
 import 'trending_screen.dart';
 
@@ -24,7 +24,7 @@ class _MovieHouseState extends State<MovieHouse> {
     TrendingScreen(),
     GenreScreen(),
     WatchHistoryScreen(),
-    // ProfileScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -80,10 +80,10 @@ class _MovieHouseState extends State<MovieHouse> {
             icon: Icon(Icons.history),
             label: 'History',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.person),
-          //   label: 'Profile',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );

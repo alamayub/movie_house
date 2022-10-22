@@ -134,7 +134,6 @@ class Api {
       final response = await http.get(Uri.parse(url));
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
-      log('137 $movies');
       // https://www.youtube.com/watch?v=UJlMFx6fm60
       return movies != null
           ? movies!

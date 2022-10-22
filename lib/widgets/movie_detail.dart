@@ -14,17 +14,12 @@ import 'recommended_movies.dart';
 showMovieDetail(BuildContext context, MovieModel movieModel) {
   final Size size = MediaQuery.of(context).size;
   return showModalBottomSheet(
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(24),
-        topRight: Radius.circular(24),
-      ),
-    ),
     isScrollControlled: true,
     context: context,
     builder: (context) => DefaultTabController(
       length: 2,
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,

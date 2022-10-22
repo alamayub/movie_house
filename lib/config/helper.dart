@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:intl/intl.dart';
 
 double getVideoProgress(Duration current, Duration total) {
@@ -32,11 +30,11 @@ getDateWithTime(int a) {
   // log('Current ${now.day - date.subtract(const Duration(days: 1)).day}');
   // return DateFormat.yMMMd().add_jm().format(date);
   var time = DateFormat.jm().format(old);
-  log('Day Diff ${diff.inDays}, ${diff.inHours}, ${diff.inMinutes}');
+  // log('Day Diff ${diff.inDays}, ${diff.inHours}, ${diff.inMinutes}');
   var res = '';
-  if(now.day == old.day) {
+  if (now.day == old.day) {
     res = 'Today $time';
-  } else if(diff.inDays == 0) {
+  } else if (diff.inDays == 0) {
     res = 'Yesterday, $time';
   } else {
     res = '${diff.inDays} days ago, $time';
