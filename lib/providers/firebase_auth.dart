@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show
@@ -30,11 +28,9 @@ class FirebaseAuthProvider {
   }) async {
     try {
       await FirebaseAuth.instance.signInWithCredential(authCredential);
-    } on FirebaseAuthException catch (e) {
-      log('Error 26 ${e.toString()}');
+    } on FirebaseAuthException catch (_) {
       rethrow;
     } catch (e) {
-      log('Error 29 ${e.toString()}');
       rethrow;
     }
   }
@@ -49,11 +45,9 @@ class FirebaseAuthProvider {
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      log('Error 45 ${e.toString()}');
+    } on FirebaseAuthException catch (_) {
       rethrow;
     } catch (e) {
-      log('Error 48 ${e.toString()}');
       rethrow;
     }
   }
@@ -72,11 +66,9 @@ class FirebaseAuthProvider {
       await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
       await FirebaseAuth.instance.currentUser!.reload();
     } on FirebaseAuthException catch (e) {
-      log('Error 66 ${e.toString()}');
       if (e.code == 'requires-recent-login') await logout();
       rethrow;
     } catch (e) {
-      log('Error 69 ${e.toString()}');
       rethrow;
     }
   }
@@ -86,11 +78,9 @@ class FirebaseAuthProvider {
     try {
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
-      log('Error 79 ${e.toString()}');
       if (e.code == 'requires-recent-login') await logout();
       rethrow;
     } catch (e) {
-      log('Error 82 ${e.toString()}');
       rethrow;
     }
   }
@@ -99,11 +89,9 @@ class FirebaseAuthProvider {
   Future<void> logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-    } on FirebaseAuthException catch (e) {
-      log('Error 92 ${e.toString()}');
+    } on FirebaseAuthException catch (_) {
       rethrow;
     } catch (e) {
-      log('Error 95 ${e.toString()}');
       rethrow;
     }
   }
@@ -113,11 +101,9 @@ class FirebaseAuthProvider {
     try {
       await FirebaseAuth.instance.currentUser!.delete();
     } on FirebaseAuthException catch (e) {
-      log('Error 105 ${e.toString()}');
       if (e.code == 'requires-recent-login') await logout();
       rethrow;
     } catch (e) {
-      log('Error 108 ${e.toString()}');
       rethrow;
     }
   }
@@ -148,10 +134,8 @@ class FirebaseAuthProvider {
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      log('Error 148 ${e.toString()}');
       rethrow;
     } catch (e) {
-      log('Error 152 ${e.toString()}');
       rethrow;
     }
   }
@@ -169,10 +153,8 @@ class FirebaseAuthProvider {
       // Once signed in, return the UserCredential
       return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
     } on FirebaseAuthException catch (e) {
-      log('Error 170 ${e.toString()}');
       rethrow;
     } catch (e) {
-      log('Error 174 ${e.toString()}');
       rethrow;
     }
   }
