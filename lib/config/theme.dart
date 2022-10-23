@@ -7,6 +7,7 @@ ThemeData theme() {
       elevation: 0,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
+      
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),

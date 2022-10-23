@@ -8,9 +8,15 @@ import 'package:movie_house/widgets/message_dialog.dart';
 
 import '../widgets/custom_material_button.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -24,18 +30,11 @@ class ProfileScreen extends StatelessWidget {
               var user = snapshot.data!;
               return Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Column(
+                  MyProfileWidget(
+                    widget: Column(
                       children: [
                         CustomTextWidget(
-                          title: user.displayName!,
+                          title: user.displayName ?? '',
                           isTitle: true,
                         ),
                         CustomTextWidget(
@@ -45,17 +44,62 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: CustomTextWidget(
+                  MyProfileWidget(
+                    widget: CustomTextWidget(
                       title: user.toString(),
                       maxLines: 20,
+                    ),
+                  ),
+                  MyProfileWidget(
+                    widget: Row(
+                      children: [
+                        Icon(
+                          user.emailVerified == false
+                              ? Icons.close
+                              : Icons.check,
+                          size: 20,
+                          color: user.emailVerified == false
+                              ? Colors.red
+                              : Colors.green,
+                        ),
+                        const SizedBox(width: 4),
+                        CustomTextWidget(
+                          title: user.emailVerified == false
+                              ? 'Not verified'
+                              : 'Verified',
+                          color: user.emailVerified == false
+                              ? Colors.red
+                              : Colors.green,
+                        ),
+                        const Spacer(),
+                        user.emailVerified == false
+                            ? GestureDetector(
+                                onTap: () async {
+                                  try {
+                                    await FirebaseAuthProvider()
+                                        .sendEmailVerification();
+                                    // ignore: use_build_context_synchronously
+                                    await showMessageDialog(
+                                      context,
+                                      'Success',
+                                      'An email verification link has been sent to your email. Please verify it.',
+                                    );
+                                  } catch (e) {
+                                    // ignore: use_build_context_synchronously
+                                    await showMessageDialog(
+                                      context,
+                                      'Error',
+                                      e.toString(),
+                                    );
+                                  }
+                                },
+                                child: const CustomTextWidget(
+                                  title: 'Verify',
+                                  color: Colors.blue,
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
                   ),
                   CustomMaterialButton(
@@ -64,6 +108,33 @@ class ProfileScreen extends StatelessWidget {
                     onPressed: () async {
                       var res = await showLogoutDialog(context);
                       if (res == true) FirebaseAuthProvider().logout();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  CustomMaterialButton(
+                    title: 'Delete Account',
+                    onPressed: () async {
+                      try {
+                        setState(() => loading = true);
+                        var res = await showDeleteAccountDialog(context);
+                        if (res == true) {
+                          await FirebaseAuthProvider().deleteAccount();
+                          // ignore: use_build_context_synchronously
+                          await showMessageDialog(
+                            context,
+                            'Deleted',
+                            'Your account has been deleted successfully. You won\'t be able to login with previous credentials.',
+                          );
+                        }
+                      } catch (e) {
+                        // ignore: use_build_context_synchronously
+                        await showMessageDialog(
+                          context,
+                          'Error',
+                          e.toString(),
+                        );
+                      }
+                      setState(() => loading = false);
                     },
                   ),
                 ],
@@ -136,6 +207,7 @@ showLoginOptions(BuildContext context) {
                   const SizedBox(height: 16),
                   toggle == false
                       ? TextField(
+                          autocorrect: false,
                           decoration: const InputDecoration(
                             hintText: 'Full Name*',
                             prefixIcon: Icon(Icons.person),
@@ -208,6 +280,14 @@ showLoginOptions(BuildContext context) {
                                 email: email,
                                 password: password,
                               );
+                              await FirebaseAuthProvider()
+                                  .sendEmailVerification();
+                              // ignore: use_build_context_synchronously
+                              await showMessageDialog(
+                                context,
+                                'Success',
+                                'An email verification link has been sent to your email. Please verify it.',
+                              );
                               // ignore: use_build_context_synchronously
                               Navigator.of(context).pop();
                             } catch (e) {
@@ -264,3 +344,98 @@ Future<bool> showLogoutDialog(BuildContext context) {
     },
   ).then((value) => value ?? false);
 }
+
+// delete account
+Future<bool> showDeleteAccountDialog(BuildContext context) {
+  return showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        content: const Text(
+            'Are you sure, you want to delete your account? You\'ll loose all progress till now and you won\'t be able login again with current credentials.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes, delete it'),
+          )
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
+}
+
+class MyProfileWidget extends StatelessWidget {
+  final Widget widget;
+  const MyProfileWidget({
+    super.key,
+    required this.widget,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.only(bottom: 16),
+      child: widget,
+    );
+  }
+}
+
+
+/*const Divider(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomMaterialButton(
+                          title: 'Google',
+                          onPressed: () async {
+                            try {
+                              setModalState(() => loading = true);
+                              await FirebaseAuthProvider().signInWithGoogle();
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              await showMessageDialog(
+                                context,
+                                'Error',
+                                e.toString(),
+                              );
+                            }
+                            setModalState(() => loading = false);
+                          },
+                          iconData: Icons.g_mobiledata_outlined,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomMaterialButton(
+                          title: 'Facebook',
+                          onPressed: () async {
+                            try {
+                              setModalState(() => loading = true);
+                              await FirebaseAuthProvider().signInWithFacebook();
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              await showMessageDialog(
+                                context,
+                                'Error',
+                                e.toString(),
+                              );
+                            }
+                            setModalState(() => loading = false);
+                          },
+                          iconData: Icons.facebook,
+                        ),
+                      ),
+                    ],
+                  )*/

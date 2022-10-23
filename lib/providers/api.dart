@@ -16,6 +16,7 @@ class Api {
     try {
       var url = '$BASE_URL/genre/movie/list?api_key=$API_KEY&language=en-US';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final genres = responseData['genres'];
       return genres != null
@@ -32,6 +33,7 @@ class Api {
       var url =
           '$BASE_URL/search/movie?api_key=$API_KEY&query=$search&language=en-US&page=1&include_adult=true';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       return movies != null
@@ -51,6 +53,7 @@ class Api {
       const timeWindow = 'week';
       var url = '$BASE_URL/trending/$mediaType/$timeWindow?api_key=$API_KEY';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       return movies != null
@@ -67,6 +70,7 @@ class Api {
       var url =
           '$BASE_URL/movie/$id/recommendations?api_key=$API_KEY&language=en-US&page=1';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       return movies != null
@@ -82,6 +86,7 @@ class Api {
     try {
       var url = '$BASE_URL/discover/movie?api_key=$API_KEY&with_genres=$id';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       return movies != null
@@ -98,6 +103,7 @@ class Api {
       var url =
           '$BASE_URL/movie/$id/similar?api_key=$API_KEY&language=en-US&page=1';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       // log('genres ${responseData.toString()}');
       final movies = responseData['results'];
@@ -117,6 +123,7 @@ class Api {
         url = '$BASE_URL/movie/$type?api_key=$API_KEY&language=en-US';
       }
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       return movies != null
@@ -132,6 +139,7 @@ class Api {
     try {
       var url = '$BASE_URL/movie/$id/videos?api_key=$API_KEY&language=en-US';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final movies = responseData['results'];
       // https://www.youtube.com/watch?v=UJlMFx6fm60
@@ -151,6 +159,7 @@ class Api {
       var url =
           '$BASE_URL/movie/$id/reviews?api_key=$API_KEY&language=en-US&page=1';
       final response = await http.get(Uri.parse(url));
+      if (response.body.isEmpty) return [];
       final responseData = json.decode(response.body);
       final data = responseData['results'];
       log('Reviews $data');
