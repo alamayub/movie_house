@@ -133,7 +133,7 @@ class FirebaseAuthProvider {
 
       // Once signed in, return the UserCredential
       return await FirebaseAuth.instance.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       rethrow;
     } catch (e) {
       rethrow;
@@ -152,7 +152,7 @@ class FirebaseAuthProvider {
 
       // Once signed in, return the UserCredential
       return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (_) {
       rethrow;
     } catch (e) {
       rethrow;
