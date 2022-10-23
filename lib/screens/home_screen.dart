@@ -115,27 +115,3 @@ class MyHomePageTitleWidget extends StatelessWidget {
     );
   }
 }
-
-
-/*// latest movies
-          const MyHomePageTitleWidget(title: 'Latest'),
-          const LatestMoviesWidget(isHorizontal: true),
-          const SizedBox(height: 20),
-
-          FutureBuilder<List<MovieModel>>(
-            future: Api().getMovies('popular'),
-            builder: (_, snap) {
-              if (snap.connectionState == ConnectionState.done) {
-                if (snap.hasData) {
-                  final List<MovieModel> movies = snap.data!;
-                  return MoviesListWidget(movies: movies);
-                }
-                return Center(
-                  child: Text('Error ${snap.error.toString()}'),
-                );
-              }
-              return const Center(
-                child: Loader(),
-              );
-            },
-          ),*/

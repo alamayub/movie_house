@@ -2,11 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'
-    show
-        AuthCredential,
-        FirebaseAuth,
-        FirebaseAuthException,
-        User;
+    show AuthCredential, FirebaseAuth, FirebaseAuthException, User;
 
 import '../firebase_options.dart';
 
@@ -56,6 +52,7 @@ class FirebaseAuthProvider {
 
   // register with email and password
   Future<void> registerWithEmailAndPassword({
+    required String name,
     required String email,
     required String password,
   }) async {
@@ -64,6 +61,7 @@ class FirebaseAuthProvider {
         email: email,
         password: password,
       );
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
     } on FirebaseAuthException catch (e) {
       log('Error 91 ${e.toString()}');
       rethrow;
