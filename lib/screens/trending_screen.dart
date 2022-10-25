@@ -50,7 +50,6 @@ class TrendingMediaWidget extends StatelessWidget {
       child: FutureBuilder<List<MovieModel>>(
         future: Api().getTrendingMovies(type),
         builder: (_, snap) {
-          // getTrendingMovies
           if(snap.connectionState == ConnectionState.done) {
             if(snap.hasData) {
               final List<MovieModel> movies = snap.data!;

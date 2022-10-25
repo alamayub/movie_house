@@ -8,7 +8,6 @@ import 'package:movie_house/widgets/custom_image_provider.dart';
 import 'package:movie_house/widgets/custom_text_widget.dart';
 import 'package:movie_house/widgets/loader.dart';
 
-import '../config/constants.dart';
 import '../config/helper.dart';
 
 class WatchHistoryScreen extends StatelessWidget {
@@ -126,7 +125,7 @@ class GetRecentMovieWidget extends StatelessWidget {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: CustomImageProvider(
-                    image: '$IMAGE_URL${movie.posterPath}',
+                    image: movie.posterPath,
                   ),
                 ),
                 const SizedBox(width: 10),

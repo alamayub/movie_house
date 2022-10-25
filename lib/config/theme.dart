@@ -7,7 +7,6 @@ ThemeData theme() {
       elevation: 0,
     ),
     bottomSheetTheme: const BottomSheetThemeData(
-      
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -19,6 +18,8 @@ ThemeData theme() {
       elevation: 0,
       backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.black45,
     ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
@@ -38,7 +39,7 @@ ThemeData theme() {
       errorStyle: textStyle(Colors.red),
       helperStyle: textStyle(Colors.black),
       contentPadding: const EdgeInsets.all(12),
-    )
+    ),
   );
 }
 

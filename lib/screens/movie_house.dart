@@ -55,37 +55,34 @@ class _MovieHouseState extends State<MovieHouse> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
         onTap: (val) {
           setState(() => _currentIndex = val);
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            label: 'Trending',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Genre',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        items: menuLists
+            .map((e) => BottomNavigationBarItem(
+                  icon: Icon(e.iconData),
+                  label: e.label,
+                ))
+            .toList(),
       ),
     );
   }
 }
+
+class BottomMenu {
+  final IconData iconData;
+  final String label;
+  const BottomMenu({
+    required this.iconData,
+    required this.label,
+  });
+}
+
+List<BottomMenu> menuLists = const [
+  BottomMenu(iconData: Icons.home_filled, label: 'Home'),
+  BottomMenu(iconData: Icons.search, label: 'Search'),
+  BottomMenu(iconData: Icons.trending_up, label: 'Trending'),
+  BottomMenu(iconData: Icons.category, label: 'Genre'),
+  BottomMenu(iconData: Icons.history, label: 'History'),
+  BottomMenu(iconData: Icons.person, label: 'Profile'),
+];

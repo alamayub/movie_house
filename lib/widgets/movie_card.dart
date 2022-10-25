@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../config/constants.dart';
 import '../models/movie_model.dart';
 import 'custom_image_provider.dart';
-// import 'custom_rating_bar.dart';
 import 'custom_text_widget.dart';
 import 'movie_detail.dart';
 
@@ -35,7 +33,7 @@ class MovieCard extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: CustomImageProvider(
-                image: '$IMAGE_URL${movieModel.posterPath}',
+                image: movieModel.posterPath,
               ),
             ),
             const SizedBox(width: 16),

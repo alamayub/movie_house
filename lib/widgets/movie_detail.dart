@@ -25,19 +25,6 @@ showMovieDetail(BuildContext context, MovieModel movieModel) {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container(
-            //   height: size.height * .2,
-            //   width: double.infinity,
-            //   decoration: BoxDecoration(
-            //     color: Colors.white,
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   clipBehavior: Clip.antiAlias,
-            //   child: CustomImageProvider(
-            //     image: '$IMAGE_URL${movieModel.posterPath}',
-            //   ),
-            // ),
-            // const SizedBox(height: 16),
             CustomTextWidget(
               title: movieModel.title ?? movieModel.name!,
               isTitle: true,

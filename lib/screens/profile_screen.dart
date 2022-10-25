@@ -19,142 +19,144 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      physics: const BouncingScrollPhysics(),
-      child: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              var user = snapshot.data!;
-              return Column(
-                children: [
-                  MyProfileWidget(
-                    widget: Column(
-                      children: [
-                        CustomTextWidget(
-                          title: user.displayName ?? '',
-                          isTitle: true,
-                        ),
-                        CustomTextWidget(
-                          title: user.email!,
-                          date: true,
-                        ),
-                      ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
+        child: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                var user = snapshot.data!;
+                return Column(
+                  children: [
+                    MyProfileWidget(
+                      widget: Column(
+                        children: [
+                          CustomTextWidget(
+                            isTitle: true,
+                            title: user.displayName ?? '',
+                          ),
+                          CustomTextWidget(
+                            date: true,
+                            title: user.email!,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  MyProfileWidget(
-                    widget: CustomTextWidget(
-                      title: user.toString(),
-                      maxLines: 20,
+                    MyProfileWidget(
+                      widget: CustomTextWidget(
+                        title: user.toString(),
+                        maxLines: 20,
+                      ),
                     ),
-                  ),
-                  MyProfileWidget(
-                    widget: Row(
-                      children: [
-                        Icon(
+                    MyProfileWidget(
+                      widget: Row(
+                        children: [
+                          Icon(
+                            user.emailVerified == false
+                                ? Icons.close
+                                : Icons.check,
+                            size: 20,
+                            color: user.emailVerified == false
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                          const SizedBox(width: 4),
+                          CustomTextWidget(
+                            title: user.emailVerified == false
+                                ? 'Not verified'
+                                : 'Verified',
+                            color: user.emailVerified == false
+                                ? Colors.red
+                                : Colors.green,
+                          ),
+                          const Spacer(),
                           user.emailVerified == false
-                              ? Icons.close
-                              : Icons.check,
-                          size: 20,
-                          color: user.emailVerified == false
-                              ? Colors.red
-                              : Colors.green,
-                        ),
-                        const SizedBox(width: 4),
-                        CustomTextWidget(
-                          title: user.emailVerified == false
-                              ? 'Not verified'
-                              : 'Verified',
-                          color: user.emailVerified == false
-                              ? Colors.red
-                              : Colors.green,
-                        ),
-                        const Spacer(),
-                        user.emailVerified == false
-                            ? GestureDetector(
-                                onTap: () async {
-                                  try {
-                                    await FirebaseAuthProvider()
-                                        .sendEmailVerification();
-                                    // ignore: use_build_context_synchronously
-                                    await showMessageDialog(
-                                      context,
-                                      'Success',
-                                      'An email verification link has been sent to your email. Please verify it.',
-                                    );
-                                  } catch (e) {
-                                    // ignore: use_build_context_synchronously
-                                    await showMessageDialog(
-                                      context,
-                                      'Error',
-                                      e.toString(),
-                                    );
-                                  }
-                                },
-                                child: const CustomTextWidget(
-                                  title: 'Verify',
-                                  color: Colors.blue,
-                                ),
-                              )
-                            : const SizedBox(),
-                      ],
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    try {
+                                      await FirebaseAuthProvider()
+                                          .sendEmailVerification();
+                                      // ignore: use_build_context_synchronously
+                                      await showMessageDialog(
+                                        context,
+                                        'Success',
+                                        'An email verification link has been sent to your email. Please verify it.',
+                                      );
+                                    } catch (e) {
+                                      // ignore: use_build_context_synchronously
+                                      await showMessageDialog(
+                                        context,
+                                        'Error',
+                                        e.toString(),
+                                      );
+                                    }
+                                  },
+                                  child: const CustomTextWidget(
+                                    title: 'Verify',
+                                    color: Colors.blue,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
+                      ),
                     ),
-                  ),
-                  CustomMaterialButton(
-                    title: 'Logout',
-                    color: Colors.red,
-                    onPressed: () async {
-                      var res = await showLogoutDialog(context);
-                      if (res == true) FirebaseAuthProvider().logout();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  CustomMaterialButton(
-                    title: 'Delete Account',
-                    onPressed: () async {
-                      try {
-                        setState(() => loading = true);
-                        var res = await showDeleteAccountDialog(context);
-                        if (res == true) {
-                          await FirebaseAuthProvider().deleteAccount();
+                    CustomMaterialButton(
+                      title: 'Logout',
+                      color: Colors.red,
+                      onPressed: () async {
+                        var res = await showLogoutDialog(context);
+                        if (res == true) FirebaseAuthProvider().logout();
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    CustomMaterialButton(
+                      title: 'Delete Account',
+                      onPressed: () async {
+                        try {
+                          setState(() => loading = true);
+                          var res = await showDeleteAccountDialog(context);
+                          if (res == true) {
+                            await FirebaseAuthProvider().deleteAccount();
+                            // ignore: use_build_context_synchronously
+                            await showMessageDialog(
+                              context,
+                              'Deleted',
+                              'Your account has been deleted successfully. You won\'t be able to login with previous credentials.',
+                            );
+                          }
+                        } catch (e) {
                           // ignore: use_build_context_synchronously
                           await showMessageDialog(
                             context,
-                            'Deleted',
-                            'Your account has been deleted successfully. You won\'t be able to login with previous credentials.',
+                            'Error',
+                            e.toString(),
                           );
                         }
-                      } catch (e) {
-                        // ignore: use_build_context_synchronously
-                        await showMessageDialog(
-                          context,
-                          'Error',
-                          e.toString(),
-                        );
-                      }
-                      setState(() => loading = false);
-                    },
+                        setState(() => loading = false);
+                      },
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: CustomTextWidget(
+                    title: snapshot.error.toString(),
+                    isTitle: true,
+                    color: Colors.red,
                   ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: CustomTextWidget(
-                  title: snapshot.error.toString(),
-                  isTitle: true,
-                  color: Colors.red,
-                ),
+                );
+              }
+              return CustomMaterialButton(
+                title: 'Login',
+                onPressed: () => showLoginOptions(context),
               );
             }
-            return CustomMaterialButton(
-              title: 'Login',
-              onPressed: () => showLoginOptions(context),
-            );
-          }
-          return const Loader();
-        },
+            return const Loader();
+          },
+        ),
       ),
     );
   }
@@ -316,6 +318,58 @@ showLoginOptions(BuildContext context) {
                       }
                     },
                   ),
+                  const Divider(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: CustomMaterialButton(
+                          title: 'Google',
+                          onPressed: () async {
+                            try {
+                              setModalState(() => loading = true);
+                              await FirebaseAuthProvider().signInWithGoogle();
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              setModalState(() => loading = false);
+                              // ignore: use_build_context_synchronously
+                              await showMessageDialog(
+                                context,
+                                'Error',
+                                e.toString(),
+                              );
+                            }
+                            setModalState(() => loading = false);
+                          },
+                          iconData: Icons.g_mobiledata_outlined,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: CustomMaterialButton(
+                          title: 'Facebook',
+                          onPressed: () async {
+                            try {
+                              setModalState(() => loading = true);
+                              await FirebaseAuthProvider().signInWithFacebook();
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              setModalState(() => loading = false);
+                              // ignore: use_build_context_synchronously
+                              await showMessageDialog(
+                                context,
+                                'Error',
+                                e.toString(),
+                              );
+                            }
+                          },
+                          iconData: Icons.facebook,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
       ),
@@ -389,53 +443,3 @@ class MyProfileWidget extends StatelessWidget {
     );
   }
 }
-
-
-/*const Divider(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomMaterialButton(
-                          title: 'Google',
-                          onPressed: () async {
-                            try {
-                              setModalState(() => loading = true);
-                              await FirebaseAuthProvider().signInWithGoogle();
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                            } catch (e) {
-                              await showMessageDialog(
-                                context,
-                                'Error',
-                                e.toString(),
-                              );
-                            }
-                            setModalState(() => loading = false);
-                          },
-                          iconData: Icons.g_mobiledata_outlined,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: CustomMaterialButton(
-                          title: 'Facebook',
-                          onPressed: () async {
-                            try {
-                              setModalState(() => loading = true);
-                              await FirebaseAuthProvider().signInWithFacebook();
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                            } catch (e) {
-                              await showMessageDialog(
-                                context,
-                                'Error',
-                                e.toString(),
-                              );
-                            }
-                            setModalState(() => loading = false);
-                          },
-                          iconData: Icons.facebook,
-                        ),
-                      ),
-                    ],
-                  )*/

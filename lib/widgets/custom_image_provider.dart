@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../config/constants.dart';
+
 class CustomImageProvider extends StatelessWidget {
-  final String image;
+  final String? image;
   const CustomImageProvider({
     Key? key,
-    required this.image,
+    this.image,
   }) : super(key: key);
 
   @override
@@ -14,7 +16,7 @@ class CustomImageProvider extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       child: CachedNetworkImage(
-        imageUrl: image,
+        imageUrl: image != null ? '$IMAGE_URL$image' : 'https://www.pngall.com/wp-content/uploads/12/Avatar-PNG-HD-Image.png',
         fit: BoxFit.cover,
         progressIndicatorBuilder: (context, url, downloadProgress) => Center(
           child: Transform.scale(
